@@ -141,11 +141,3 @@ resource "aws_instance" "web_server" {
     Name = "Ubuntu EC2 Server"
   }
 }
-
-resource "aws_s3_bucket" "s3bucket1" {
-  bucket = "testS#bucket"
-
-  tags = {
-    "Name" = "test-s3-bucket"
-  }
-}
