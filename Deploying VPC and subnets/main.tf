@@ -141,3 +141,15 @@ resource "aws_instance" "web_server" {
     Name = "Ubuntu EC2 Server"
   }
 }
+
+resource "aws_s3_bucket" "testS3Bucket" {
+  bucket = "mu-test-bucket-pavan1234321"
+  tags = {
+    "Terraform" = "True"
+  }
+}
+
+resource "random_bytes" "random1" {
+  length = 16
+
+}
