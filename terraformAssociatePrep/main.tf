@@ -1,6 +1,13 @@
 # Configure the AWS Provider
 provider "aws" {
   region = "us-east-1"
+  default_tags {
+    tags = {
+
+      "ProvisionedThrough" = "Terraform"
+    }
+
+  }
 }
 
 #Retrieve the list of AZs in the current AWS region
@@ -151,5 +158,25 @@ resource "aws_s3_bucket" "testS3Bucket" {
 
 resource "random_bytes" "random1" {
   length = 16
+
+}
+
+resource "tls_private_key" "ssh-key" {
+  algorithm = "RSA"
+
+}
+resource "local_file" "private-key" {
+  filename = "private-key.pem"
+  content  = tls_private_key.ssh-key.private_key_pem
+
+}
+
+resource "aws_key_pair" "test-key-pair" {
+  public_key = tls_private_key.ssh-key.public_key_openssh
+  key_name   = "test-key-pair"
+
+  tags = {
+    "Name" = "test-key-pair"
+  }
 
 }
