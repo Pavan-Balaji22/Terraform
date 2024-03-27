@@ -201,12 +201,10 @@ resource "aws_security_group" "ingress-ssh" {
   name   = "allow-all-ssh"
   vpc_id = aws_vpc.vpc.id
   ingress {
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
   }
   // Terraform removes the default rule
   egress {
@@ -271,6 +269,17 @@ module "server" {
   source    = "./modules/server"
   ami       = data.aws_ami.ubuntu.id
   subnet_id = aws_subnet.public_subnets["public_subnet_3"].id
+  security_groups = [
+    aws_security_group.vpc-ping.id,
+    aws_security_group.ingress-ssh.id,
+    aws_security_group.vpc-web.id
+  ]
+}
+
+module "server_subnet_1" {
+  source    = "./modules/server"
+  ami       = data.aws_ami.ubuntu.id
+  subnet_id = aws_subnet.public_subnets["public_subnet_1"].id
   security_groups = [
     aws_security_group.vpc-ping.id,
     aws_security_group.ingress-ssh.id,
