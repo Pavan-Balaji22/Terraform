@@ -10,6 +10,11 @@ provider "aws" {
   }
 }
 
+locals {
+  team        = "api-management"
+  application = "corp_api"
+}
+
 #Retrieve the list of AZs in the current AWS region
 data "aws_availability_zones" "available" {}
 data "aws_region" "current" {}
@@ -140,21 +145,23 @@ data "aws_ami" "ubuntu" {
 }
 
 # Terraform Resource Block - To Build EC2 instance in Public Subnet
-resource "aws_instance" "ubuntu_server" {
+resource "aws_instance" "web_server" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.public_subnets["public_subnet_1"].id
   security_groups             = [aws_security_group.vpc-ping.id, aws_security_group.ingress-ssh.id, aws_security_group.vpc-web.id]
   associate_public_ip_address = true
-  key_name                    = aws_key_pair.test-key-pair.key_name
-  connection {
-    user        = "ubuntu"
-    private_key = tls_private_key.ssh-key.private_key_pem
-    host        = self.public_ip
-  }
+  # key_name                    = aws_key_pair.test-key-pair.key_name
+  # connection {
+  #   user        = "ubuntu"
+  #   private_key = tls_private_key.ssh-key.private_key_pem
+  #   host        = self.public_ip
+  # }
 
   tags = {
-    Name = "Ubuntu EC2 Server"
+    Name = "Ubuntu EC2 Server 21"
+    app  = local.application
+    team = local.team
   }
 
   lifecycle {
@@ -175,25 +182,25 @@ resource "random_bytes" "random1" {
 
 }
 
-resource "tls_private_key" "ssh-key" {
-  algorithm = "RSA"
+# resource "tls_private_key" "ssh-key" {
+#   algorithm = "RSA"
 
-}
-resource "local_file" "private-key" {
-  filename = "private-key.pem"
-  content  = tls_private_key.ssh-key.private_key_pem
+# }
+# resource "local_file" "private-key" {
+#   filename = "private-key.pem"
+#   content  = tls_private_key.ssh-key.private_key_pem
 
-}
+# }
 
-resource "aws_key_pair" "test-key-pair" {
-  public_key = tls_private_key.ssh-key.public_key_openssh
-  key_name   = "test-key-pair"
+# resource "aws_key_pair" "test-key-pair" {
+#   public_key = tls_private_key.ssh-key.public_key_openssh
+#   key_name   = "test-key-pair"
 
-  tags = {
-    "Name" = "test-key-pair"
-  }
+#   tags = {
+#     "Name" = "test-key-pair"
+#   }
 
-}
+# }
 
 # Security Groups
 
@@ -277,12 +284,12 @@ module "server" {
 }
 
 module "server_subnet_1" {
-  source      = "./modules/web-server"
-  ami         = data.aws_ami.ubuntu.id
-  key_name    = aws_key_pair.test-key-pair.key_name
-  user        = "ubuntu"
-  private_key = tls_private_key.ssh-key.private_key_pem
-  subnet_id   = aws_subnet.public_subnets["public_subnet_1"].id
+  source = "./modules/web-server"
+  ami    = data.aws_ami.ubuntu.id
+  # key_name    = aws_key_pair.test-key-pair.key_name
+  user = "ubuntu"
+  # private_key = tls_private_key.ssh-key.private_key_pem
+  subnet_id = aws_subnet.public_subnets["public_subnet_1"].id
   security_groups = [aws_security_group.vpc-ping.id,
     aws_security_group.ingress-ssh.id,
   aws_security_group.vpc-web.id]

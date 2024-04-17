@@ -11,9 +11,12 @@ variable "security_groups" {
 }
 
 variable "key_name" {
+  nullable = true
+  default  = null
 
 }
 
 variable "private_key" {
-
+  nullable = true
+  default  = null
 }
