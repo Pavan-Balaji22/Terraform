@@ -6,4 +6,5 @@ on:
 
 jobs:
   call-diff-workflow:
+    permissions: write-all 
     uses: Pavan-Balaji22/Github-Actions-Workflows/.github/workflows/cdk-diff.yaml@master
