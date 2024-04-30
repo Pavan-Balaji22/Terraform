@@ -6,5 +6,7 @@ on:
 
 jobs:
   call-diff-workflow:
-    permissions: write-all 
+    permissions: write-all
     uses: Pavan-Balaji22/Github-Actions-Workflows/.github/workflows/cdk-diff.yaml@master
+    secrets:
+      assume_role: ${{secrets.ASSUME_ROLE}}
