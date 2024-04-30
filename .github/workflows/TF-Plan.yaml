@@ -1,12 +1,12 @@
-name: CDK Test workflow
+name: Terraform Plan workflow
 on:
   issue_comment:
     types: [created, edited]
   workflow_dispatch:
 
 jobs:
-  call-diff-workflow:
+  call-terraform-plan:
     permissions: write-all
-    uses: Pavan-Balaji22/Github-Actions-Workflows/.github/workflows/cdk-diff.yaml@master
+    uses: Pavan-Balaji22/Github-Actions-Workflows/.github/workflows/terraform-plan.yaml@master
     secrets:
       assume_role: ${{secrets.ASSUME_ROLE}}
