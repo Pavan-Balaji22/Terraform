@@ -3,10 +3,16 @@ on:
   issue_comment:
     types: [created, edited]
   workflow_dispatch:
+    inputs:
+      dir:
+        description: dir to plan for
+        type: string
 
 jobs:
   call-terraform-plan:
     permissions: write-all
     uses: Pavan-Balaji22/Github-Actions-Workflows/.github/workflows/terraform-plan.yaml@master
+    with:
+      dir: ${{inputs.dir}}
     secrets:
       assume_role: ${{secrets.ASSUME_ROLE}}
