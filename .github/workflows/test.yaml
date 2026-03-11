@@ -1,0 +1,13 @@
+name: test workflow
+permissions: write-all
+on:
+  workflow_dispatch:
+    inputs:
+      dir:
+        description: dir to plan for
+        type: string
+
+jobs:
+  call-terraform-plan:
+    uses: Pavan-Balaji22/Github-Actions-Workflows/.github/workflows/hello-world.yaml@master
+    secrets: inherit
