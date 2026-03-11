@@ -7,4 +7,3 @@ jobs:
   call-terraform-plan:
     permissions: write-all
     uses: Pavan-Balaji22/Github-Actions-Workflows/.github/workflows/hello-world.yaml@master
-    secrets: inherit
